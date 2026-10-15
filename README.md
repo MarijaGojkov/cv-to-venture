@@ -56,8 +56,8 @@ The model API key lives only on the server and is never sent to the browser.
 
 - [x] Project idea, architecture and tech stack
 - [ ] Azure / Microsoft Foundry subscription set up
-- [ ] Next.js project setup
-- [ ] Sign up, login and logout with Supabase Auth
+- [x] Next.js project setup
+- [x] Sign up, login and logout with Supabase Auth
 - [ ] CV upload (PDF) to Supabase Storage
 - [ ] Text extraction from PDF
 - [ ] Business idea generation with structured JSON output
@@ -78,7 +78,36 @@ A CV contains personal data, so the app is planned with GDPR in mind from the st
 
 ## Running locally
 
-Setup instructions will be added together with the first code.
+Requirements: Node.js 20 or newer and a free [Supabase](https://supabase.com) project.
+
+1. Clone the repository and install dependencies:
+   ```bash
+   git clone https://github.com/MarijaGojkov/cv-to-venture.git
+   cd cv-to-venture
+   npm install
+   ```
+2. Copy `.env.example` to `.env.local` and fill in your Supabase project URL and publishable key
+   (Supabase dashboard: Project Settings, API Keys).
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open http://localhost:3000, sign up, confirm your email and log in.
+
+## Project structure
+
+```
+src/
+  app/
+    page.tsx              Landing page
+    login/                Login and sign-up form + Server Actions
+    auth/confirm/         Handles the link in the confirmation email
+    dashboard/            Protected page (only for logged-in users) + logout
+  lib/supabase/
+    server.ts             Supabase client for server code
+    proxy.ts              Refreshes the session and protects pages
+  proxy.ts                Runs before each request (Next.js proxy)
+```
 
 ## About
 
