@@ -57,7 +57,7 @@ The model API key lives only on the server and is never sent to the browser.
 - [x] Project idea, architecture and tech stack
 - [ ] Azure / Microsoft Foundry subscription set up
 - [x] Next.js project setup
-- [ ] Sign up, login and logout with Supabase Auth
+- [x] Sign up, login and logout with Supabase Auth
 - [ ] CV upload (PDF) to Supabase Storage
 - [ ] Text extraction from PDF
 - [ ] Business idea generation with structured JSON output
