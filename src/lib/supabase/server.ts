@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 
 /**
  * Creates a Supabase client for server code (Server Components, Server Actions,
@@ -9,6 +10,10 @@ import { cookies } from "next/headers";
  * Create a new client for every request. Never share one between users.
  */
 export async function createClient() {
+  // Auth always depends on the current request, and the Supabase client checks
+  // token expiry with the current time (Date.now()). connection() tells Next.js
+  // to run this code at request time, never while prerendering or prefetching.
+  await connection();
   const cookieStore = await cookies();
 
   return createServerClient(
