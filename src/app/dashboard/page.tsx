@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
+import { CvIdeaForm } from "./cv-idea-form";
 
 // The page shell is static. Only the part that reads the session (cookies)
 // runs per request, inside <Suspense>, so the shell can be shown right away.
@@ -12,7 +13,7 @@ export default function DashboardPage() {
       <Suspense fallback={<p className="text-gray-600">Loading…</p>}>
         <CurrentUser />
       </Suspense>
-      <p className="text-gray-600">CV upload and business ideas are coming next.</p>
+      <CvIdeaForm />
       <form action={logout}>
         <button className="rounded border px-4 py-2">Log out</button>
       </form>
