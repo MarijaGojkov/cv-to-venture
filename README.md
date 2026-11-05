@@ -25,7 +25,7 @@ Browser ──> Next.js server ──> Supabase Storage (CV PDF)
 
 The model API key lives only on the server and is never sent to the browser.
 
-## Example output (planned format)
+## Example output
 
 ```json
 {
@@ -33,7 +33,10 @@ The model API key lives only on the server and is never sent to the browser.
   "problem": "What problem it solves",
   "solution": "What the product or service is",
   "targetCustomers": "Who pays for it",
-  "whyYou": "Which parts of the CV make this person a good founder for it",
+  "oneLiner": "The idea in one sentence",
+  "businessModel": "How it makes money",
+  "whyYou": ["Parts of the CV that make this person a good founder for it"],
+  "skillGaps": ["What the founder is missing"],
   "firstSteps": ["Step 1", "Step 2", "Step 3"]
 }
 ```
@@ -58,9 +61,10 @@ The model API key lives only on the server and is never sent to the browser.
 - [ ] Azure / Microsoft Foundry subscription set up
 - [x] Next.js project setup
 - [x] Sign up, login and logout with Supabase Auth
-- [ ] CV upload (PDF) to Supabase Storage
-- [ ] Text extraction from PDF
-- [ ] Business idea generation with structured JSON output
+- [x] CV upload (PDF) on the dashboard (processed in memory, not stored yet)
+- [ ] Store CV files in Supabase Storage
+- [x] Text extraction from PDF
+- [x] Business idea generation with structured JSON output (falls back to a fixed example idea when no Azure model is configured)
 - [ ] Save and list ideas in Postgres (with Row Level Security)
 - [ ] Deploy to Vercel
 - [ ] GDPR basics: consent before upload, clear AI-generated label, delete my data
@@ -93,6 +97,11 @@ Requirements: Node.js 20 or newer and a free [Supabase](https://supabase.com) pr
    npm run dev
    ```
 4. Open http://localhost:3000, sign up, confirm your email and log in.
+5. On the dashboard, upload a CV as PDF and click "Generate business idea".
+
+Without Azure settings the app shows a fixed example idea, clearly labeled, so the flow can be tried without an AI subscription.
+To use a real model, deploy a model (for example `gpt-4.1-mini`) in Microsoft Foundry and add
+`AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY` and `AZURE_OPENAI_DEPLOYMENT` to `.env.local` (see `.env.example`).
 
 ## Project structure
 
@@ -102,7 +111,12 @@ src/
     page.tsx              Landing page
     login/                Login and sign-up form + Server Actions
     auth/confirm/         Handles the link in the confirmation email
-    dashboard/            Protected page (only for logged-in users) + logout
+    dashboard/            Protected page: CV upload form, idea card, Server Actions
+  lib/ai/
+    idea-schema.ts        Zod schema for the business idea (sent to the model and used to validate)
+    generate-idea.ts      Calls Azure OpenAI with structured output, or returns an example idea
+  lib/pdf/
+    extract-text.ts       Extracts text from the PDF with unpdf
   lib/supabase/
     server.ts             Supabase client for server code
     proxy.ts              Refreshes the session and protects pages
